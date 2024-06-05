@@ -6,7 +6,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
-
+import logo from '../assets/LOGO02.png'
+import { BiUser, BiKey, BiHide, BiShow, BiEditAlt } from 'react-icons/bi';
 function Registro() {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ function Registro() {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
             const user = userCredential.user;
-
+            
             // Salvar informações adicionais do usuário no Firestore
             await addDoc(collection(db, 'users'), {
                 uid: user.uid,
@@ -37,78 +38,93 @@ function Registro() {
     };
 
 
+
     return (
-        <div className="container-fluid bg-pastel-blue vh-100">
-            <div className="row justify-content-center">
-                <h1 className="text-center p-4">Instituto Dom Bosco</h1>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header text-dark">
-                            <h3 className="mb-0 text-center">Crie uma conta</h3>
+        <div style={{ display: 'flex', backgroundColor: '#273585', width: '100vw', height: '100vh', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+            <img src={logo} style={{ width: '300px', height: '150px',marginTop: 16 }} />
+
+
+            <div style={{ width: '75%', maxWidth: 500, textAlign: 'center', height: '60%', alignContent: 'center' }}>
+
+                <div style={{ color: '#FFF', fontWeight: 'bold', marginBottom: 16, fontSize: 26 }}>
+                    Registre-se!
+                </div>
+
+                <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5, }}>
+                    <form onSubmit={handleSubmit}>
+                        <div
+                            style={{ border: '2px solid #273585',borderRadius: 5, marginBottom: 8, height: 50, flexDirection: 'row', display: 'flex', alignItems: 'center' }}
+                        >
+                            <BiEditAlt style={{ width: '10%' }} size={26} />
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="nome"
+                                name="nome"
+                                placeholder="Nome completo"
+                                value={nome}
+                                onChange={e => setNome(e.target.value)}
+                                required
+                                style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
+                            />
+
                         </div>
-                        <div className="card-body">
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="nome">Nome:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="nome"
-                                        name="nome"
-                                        placeholder="Digite seu nome"
-                                        value={nome}
-                                        onChange={e => setNome(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email:</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        id="email"
-                                        name="email"
-                                        placeholder="Digite seu email"
-                                        value={email}
-                                        onChange={e => setEmail(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="senha">Senha:</label>
-                                    <div className="input-group">
-                                        <input
-                                            type={mostrarSenha ? 'text' : 'password'}
-                                            className="form-control"
-                                            id="senha"
-                                            name="senha"
-                                            placeholder="Digite sua senha"
-                                            value={senha}
-                                            onChange={e => setSenha(e.target.value)}
-                                            required
-                                        />
-                                        <div className="input-group-append">
-                                            <button
-                                                className="btn btn-outline-secondary"
-                                                type="button"
-                                                onClick={() => setMostrarSenha(!mostrarSenha)}
-                                            >
-                                                {mostrarSenha ? 'Ocultar' : 'Mostrar'}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" className="btn btn-outline-primary btn-block mt-4">
-                                    Registrar
-                                </button>
-                            </form>
-                            <div className="text-center mt-3">
-                                <p>Já possui uma conta? <Link className='text-danger' to={"/"}>Entre aqui</Link></p>
+
+                        <div
+                            style={{ border: '2px solid #273585',borderRadius: 5, marginBottom: 8, height: 50, flexDirection: 'row', display: 'flex', alignItems: 'center' }}
+                        >
+                            <BiUser style={{ width: '10%' }} size={26} />
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                name="email"
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                required
+                                style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
+                            />
+
+                        </div>
+
+
+
+                        <div
+                            style={{ border: '2px solid #273585',borderRadius: 5, marginBottom: 8, height: 50, flexDirection: 'row', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
+                            <BiKey style={{ width: '10%' }} size={26} />
+                            <input
+                                type={mostrarSenha ? 'text': "password"}
+                                className="form-control"
+                                id="senha"
+                                name="senha"
+                                placeholder="Senha"
+                                value={senha}
+                                onChange={e => setSenha(e.target.value)}
+                                required
+                                style={{ width: '80%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
+                            />
+                            <div onClick={() => setMostrarSenha((curr) => !curr)} style={{ width: '10%' }} >
+
+                                {
+                                    mostrarSenha ? <BiShow size={26} /> : <BiHide size={26} />
+                                }
                             </div>
+
                         </div>
-                    </div>
+
+                        <div className="text-center mt-3">
+                            <p>Já possui conta? <Link className='text-danger' to={"/"}>Conecte-se!</Link></p>
+                        </div>
+
+                        <button type="submit" style={{ border: '1px solid #273585', backgroundColor: '#273585', color: '#FFF', borderRadius: 5, width: '50%', height: 50 }}>
+                            Registrar-me
+                        </button>
+                    </form>
                 </div>
             </div>
+
         </div>
     );
 }
