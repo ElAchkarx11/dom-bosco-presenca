@@ -1,0 +1,18 @@
+.custom-button {
+    background-color: white;
+    color: #273585;
+    border-color: #273585;
+}
+
+.custom-button:hover {
+    background-color: #273585; 
+    color: #FFF;
+    border-color: #1a2757; 
+}
+
+#custom-alert {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,7 +1,7 @@
 // src/RegistrarEntrada.js
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { db, auth } from '../../firebase';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BiDoorOpen, BiArrowBack } from 'react-icons/bi';

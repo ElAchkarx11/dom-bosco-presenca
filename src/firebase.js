@@ -7,7 +7,7 @@ const firebaseConfig = {
     //Dados do firebase
     apiKey: "AIzaSyBeKyd7miaJii5LTToooikkMIqx2DLb7ZM",
     authDomain: "domboscopresenca.firebaseapp.com",
-    databaseURL: "https://domboscopresenca-default-rtdb.firebaseio.com/",
+    databaseURL: "https://domboscopresenca-default-rtdb.firebaseio.com",
     projectId: "domboscopresenca",
     storageBucket: "domboscopresenca.appspot.com",
     messagingSenderId: "550588007376",

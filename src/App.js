@@ -1,13 +1,13 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Telas/Home';
-import Login from './Telas/Login';
-import Registro from './Telas/Registro';
-import CadastrarClientes from './Telas/CadastrarClientes';
-import CadastrarEntradas from './Telas/CadastrarEntradas';
-import Relatorios from './Telas/Relatorios';
-import RelatorioDia from './Telas/RelatorioDia';
+import Home from './Telas/Home/Home';
+import Login from './Telas/Login/Login';
+import Registro from './Telas/RegistroEntradas/Registro';
+import CadastrarClientes from './Telas/CadastroClientes/CadastrarClientes';
+import CadastrarEntradas from './Telas/CadastroEntradas/CadastrarEntradas';
+import Relatorios from './Telas/Relatorios/Relatorios';
+import RelatorioDia from './Telas/Relatorios/RelatorioDia';
 
 function App() {
   return (
