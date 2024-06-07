@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
-import { db, auth } from '../firebase';
+import { db, auth } from '../../firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BiDoorOpen, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';

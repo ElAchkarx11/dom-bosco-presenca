@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { db, auth } from '../../firebase';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BiDoorOpen, BiArrowBack } from 'react-icons/bi';
