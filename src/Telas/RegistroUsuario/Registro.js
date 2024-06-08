@@ -19,6 +19,7 @@ function Registro() {
 
     const navigate = useNavigate();
 
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -81,7 +82,7 @@ function Registro() {
                                     name="nome"
                                     placeholder="Nome completo"
                                     value={nome}
-                                    onChange={e => setNome(e.target.value)}
+                                    onChange={e => setNome((e.target.value))}
                                     required
                                     style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
                                 />
@@ -99,7 +100,7 @@ function Registro() {
                                     name="email"
                                     placeholder="E-mail"
                                     value={email}
-                                    onChange={e => setEmail(e.target.value)}
+                                    onChange={e => setEmail((e.target.value))}
                                     required
                                     style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
                                 />
@@ -119,7 +120,7 @@ function Registro() {
                                     name="senha"
                                     placeholder="Senha"
                                     value={senha}
-                                    onChange={e => setSenha(e.target.value)}
+                                    onChange={e => setSenha((e.target.value))}
                                     required
                                     style={{ width: '80%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
                                 />

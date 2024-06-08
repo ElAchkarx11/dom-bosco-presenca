@@ -55,6 +55,49 @@ function RelatorioDia() {
     const diaMaisUm = addDays(new Date(parseInt(dia)), 1); // Adiciona um dia à data
 
     return (
+        <>
+
+            <div style={{ display: 'flex', backgroundColor: '#273585', width: '100vw', height: '100vh', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+
+
+
+
+                <div style={{ display: 'flex', color: '#FFF', fontWeight: 'bold', marginBottom: 16, fontSize: 26, flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                    <BiArrowBack style={{ width: '10%' }} size={26} onClick={handleBack} />
+
+                    Relatório do dia {diaMaisUm.toLocaleDateString('pt-BR')}
+                </div>
+
+                <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5 }}>
+                    <div className="row">
+                        {entradas.length > 0 ?
+                            entradas.map((entrada, index) => {
+                                return (
+                                    <div
+                                        style={{ border: '2px solid #273585', borderRadius: 5, marginBottom: 8,padding: 5, backgroundColor: '#FFF', fontWeight: 'bold' }}
+                                        key={index}
+                                    >
+                                        <h5 className="mb-1">{entrada.nome}</h5>
+                                        <p className="mb-1">CPF: {entrada.cpf.length > 0 ? entrada.cpf : 'Não informado'}</p>
+                                        <small>Registrado em {entrada.timestamp && entrada.timestamp.toDate && entrada.timestamp.toDate().toLocaleString('pt-BR')}</small>
+                                    </div>
+                                );
+                            })
+                            : (<>
+                                <div style={{ fontWeight: 'bold' }}>
+                                    Não há dados.
+                                </div>
+                            </>)}
+
+
+                    </div>
+                </div>
+            </div>
+
+        </>
+    );
+
+    return (
         <div className="container">
             <div className='header row'>
                 <div className='p-4 col-6 text-start'>
