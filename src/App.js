@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Telas/Home/Home';
 import Login from './Telas/Login/Login';
-import Registro from './Telas/RegistroEntradas/Registro';
+import Registro from './Telas/RegistroUsuario/Registro';
 import CadastrarClientes from './Telas/CadastroClientes/CadastrarClientes';
 import CadastrarEntradas from './Telas/CadastroEntradas/CadastrarEntradas';
 import Relatorios from './Telas/Relatorios/Relatorios';

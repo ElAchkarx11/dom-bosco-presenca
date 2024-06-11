@@ -1,18 +1,25 @@
-// src/RegistrarEntrada.js
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, and } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BiDoorOpen, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-
+import logo from '../../assets/LOGO02.png'
+import { BiUser, BiHome, BiSolidDirections, BiEditAlt, BiArrowBack } from 'react-icons/bi';
 
 function CadastrarEntrada() {
-    const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
     const navigate = useNavigate();
+
+    const [cpf, setCpf] = useState('');
+    const [endereco, setEndereco] = useState('');
+    const [numero, setNumero] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState('');
+    const [success, setSuccess] = useState(false);
+    const [nome, setNome] = useState('');
+
+
 
     useEffect(() => {
         const auth = getAuth();
@@ -27,26 +34,51 @@ function CadastrarEntrada() {
         return unsubscribe;
     }, [navigate]);
 
-
-
-    const handleLogout = () => {
-        signOut(auth);
-    }
-
     const handleBack = () => {
         navigate(-1);
     }
+
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setAuthenticated(true);
+            } else {
+                setAuthenticated(false);
+                navigate('/');
+            }
+        });
+        return unsubscribe;
+    }, [navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            // Verifica se o cliente existe na coleção "Clientes"
-            const q = query(collection(db, 'clientes'), where('nome', '==', nome), where('cpf', '==', cpf));
+            if (cpf.trim().length >= 1 && cpf.trim().length < 11) {
+                setMessage('O CPF deve conter 11 dígitos.')
+                setError(true)
+                return;
+            }else if (nome.trim().length >= 0 && nome.trim().length < 3) {
+                setMessage('O nome deve conter pelo menos 3 dígitos.')
+                setError(true)
+                return;
+            }
+
+            const isValidCPF = cpf.trim().length > 0 ? where('numero', '==', cpf.trim()) : null;
+            const isValidName = where('nome', '==', nome.trim());
+
+            const clauses = [isValidName, isValidCPF].filter(clause => clause !== null);
+
+            const clausules = and(...clauses);
+
+            const q = query(collection(db, 'clientes'), clausules);
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
-                alert('Cliente não encontrado!');
+                setMessage('Cliente não encontrado.');
+                setError(true);
             } else {
                 // Registro da entrada na coleção "Entradas"
                 const cliente = querySnapshot.docs[0].data();
@@ -56,75 +88,98 @@ function CadastrarEntrada() {
                     cpf: cliente.cpf,
                     timestamp: new Date()
                 });
-                alert('Entrada registrada com sucesso!');
+                setMessage('Entrada registrada com sucesso!');
+                setSuccess(true);
                 setNome('');
                 setCpf('');
             }
         } catch (error) {
             console.error('Erro ao registrar entrada:', error);
-            alert('Erro ao registrar entrada');
+            setMessage('Inconsistência ao registrar entrada.');
+            setError(true);
         }
     };
+    useEffect(() => {
+        if (error) {
+            const interval = setInterval(() => { setError(false) }, 2500);
+            clearInterval(interval)
+        }
+
+        if (success) {
+            const interval = setInterval(() => { setSuccess(false) }, 2500);
+            clearInterval(interval)
+
+        }
+    }, [error, success]);
 
     return (
-        <div className="container-fluid bg-pastel-blue vh-100">
-            <div className="row justify-content-center">
-                <div className='header row'>
-                    <div className='p-4 col-6 text-start'>
-                        <button className='btn border-none ' onClick={handleBack}>
-                            <BiArrowBack className='' style={{ fontSize: "30px" }} />
-                        </button>
+        <>
+            {error && <div class="alert alert-danger" id='custom-alert' role="alert">
+                {message}
+            </div>}
+
+            {success && <div class="alert alert-success" id='custom-alert' role="alert">
+                {message}
+            </div>}
+
+            <div style={{ display: 'flex', backgroundColor: '#273585', width: '100vw', height: '100vh', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+                <img src={logo} style={{ width: '250px', height: '100px', marginTop: 16 }} />
+
+
+                <div style={{ width: '75%', maxWidth: 500, textAlign: 'center', height: '60%', alignContent: 'center' }}>
+
+                    <div style={{ display: 'flex', color: '#FFF', fontWeight: 'bold', marginBottom: 16, fontSize: 26, flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                        <BiArrowBack style={{ width: '10%' }} size={26} onClick={handleBack} />
+
+                        Registar entrada
                     </div>
-                    <div className='p-4 col-6 text-end'>
-                        <button className='btn border-none ' onClick={handleLogout}>
-                            <BiDoorOpen className='' style={{ fontSize: "30px" }} />
-                        </button>
+
+                    <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5, }}>
+                        <form onSubmit={handleSubmit}>
+                            <div
+                                style={{ border: '2px solid #273585', borderRadius: 5, marginBottom: 8, height: 50, flexDirection: 'row', display: 'flex', alignItems: 'center' }}
+                            >
+                                <BiEditAlt style={{ width: '10%' }} size={26} />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="nome"
+                                    name="nome"
+                                    placeholder="Nome completo"
+                                    value={nome}
+                                    onChange={e => setNome((e.target.value))}
+                                    required
+                                    style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
+                                />
+
+                            </div>
+
+                            <div
+                                style={{ border: '2px solid #273585', borderRadius: 5, marginBottom: 8, height: 50, flexDirection: 'row', display: 'flex', alignItems: 'center' }}
+                            >
+                                <BiUser style={{ width: '10%' }} size={26} />
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    id="cpf"
+                                    name="cpf"
+                                    placeholder="CPF"
+                                    value={cpf}
+                                    onChange={e => setCpf((e.target.value))}
+                                    style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
+                                />
+
+                            </div>
+
+                            <button type="submit" style={{ border: '1px solid #273585', backgroundColor: '#273585', color: '#FFF', borderRadius: 5, width: '50%', height: 50, marginTop: 8 }}>
+                                Registrar
+                            </button>
+                        </form>
                     </div>
-                    <h1 className='p-2'>Registrar Entrada</h1> {/* Exibe o nome do usuário autenticado */}
-                    <hr />
                 </div>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header text-dark">
-                            <h3 className="mb-0 text-center">Registro de Entrada</h3>
-                        </div>
-                        <div className="card-body">
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="nome">Nome:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="nome"
-                                        name="nome"
-                                        placeholder="Digite o nome"
-                                        value={nome}
-                                        onChange={e => setNome(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="cpf">CPF:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="cpf"
-                                        name="cpf"
-                                        placeholder="Digite o CPF"
-                                        value={cpf}
-                                        onChange={e => setCpf(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-outline-primary btn-block mt-4">
-                                    Registrar Entrada
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+
             </div>
-        </div>
+        </>
     );
 }
 

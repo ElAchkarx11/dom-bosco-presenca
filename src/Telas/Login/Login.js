@@ -73,7 +73,7 @@ function Login() {
                                     name="email"
                                     placeholder="E-mail"
                                     value={email}
-                                    onChange={e => setEmail(e.target.value)}
+                                    onChange={e => setEmail((e.target.value))}
                                     required
                                     style={{ width: '90%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
                                 />
@@ -93,7 +93,7 @@ function Login() {
                                     name="senha"
                                     placeholder="Senha"
                                     value={senha}
-                                    onChange={e => setSenha(e.target.value)}
+                                    onChange={e => setSenha((e.target.value))}
                                     required
                                     style={{ width: '80%', height: '100%', border: 0, borderRadius: 0, backgroundColor: '#FFF' }}
                                 />
