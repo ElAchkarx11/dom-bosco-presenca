@@ -36,17 +36,19 @@ function RelatorioDia() {
 
     useEffect(() => {
         const timestamp = new Date(parseInt(dia)); // Converter o timestamp de volta para uma data
+        const inicioDoDia = new Date(timestamp.setHours(0, 0, 0, 0));
+        const fimDoDia = new Date(timestamp.setHours(23, 59, 59, 999));
         const fetchData = async () => {
             const q = query(collection(db, 'entradas'),
-                where('timestamp', '>=', timestamp),
-                where('timestamp', '<=', new Date(timestamp.getTime() + 24 * 60 * 60 * 1000))); // Adicionando 24 horas para o final do dia
+                where('timestamp', '>=', inicioDoDia),
+                where('timestamp', '<=', fimDoDia)); // Ajuste para incluir o fim do dia
             const querySnapshot = await getDocs(q);
             const entradasArray = [];
             querySnapshot.forEach(doc => {
                 entradasArray.push(doc.data());
             });
             setEntradas(entradasArray);
-            setDataFormatada(timestamp.toLocaleDateString('pt-BR'));
+            setDataFormatada(inicioDoDia.toLocaleDateString('pt-BR'));
         };
         fetchData();
     }, [dia]);
@@ -58,21 +60,19 @@ function RelatorioDia() {
                     <BiArrowBack style={{ width: '10%' }} size={26} onClick={handleBack} />
                     Relatório do dia {dataFormatada} {/* Utiliza dataFormatada diretamente para exibir o dia correto */}
                 </div>
-                <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5 }}>
+                <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5, overflowY: 'auto', height:'130%' }}>
                     <div className="row">
                         {entradas.length > 0 ?
-                            entradas.map((entrada, index) => {
-                                return (
-                                    <div
-                                        style={{ border: '2px solid #273585', borderRadius: 5, marginBottom: 8, padding: 5, backgroundColor: '#FFF', fontWeight: 'bold' }}
-                                        key={index}
-                                    >
-                                        <h5 className="mb-1">{entrada.nome}</h5>
-                                        <p className="mb-1">CPF: {entrada.cpf.length > 0 ? entrada.cpf : 'Não informado'}</p>
-                                        <small>Registrado em {entrada.timestamp && entrada.timestamp.toDate && entrada.timestamp.toDate().toLocaleString('pt-BR')}</small>
-                                    </div>
-                                );
-                            })
+                            entradas.map((entrada, index) => (
+                                <div
+                                    style={{ border: '2px solid #273585', borderRadius: 5, marginBottom: 8, padding: 5, backgroundColor: '#FFF', fontWeight: 'bold' }}
+                                    key={index}
+                                >
+                                    <h5 className="mb-1">{entrada.nome}</h5>
+                                    <p className="mb-1">CPF: {entrada.cpf.length > 0 ? entrada.cpf : 'Não informado'}</p>
+                                    <small>Registrado em {entrada.timestamp && entrada.timestamp.toDate && entrada.timestamp.toDate().toLocaleString('pt-BR')}</small>
+                                </div>
+                            ))
                             : (
                                 <div style={{ fontWeight: 'bold' }}>
                                     Não há dados.
