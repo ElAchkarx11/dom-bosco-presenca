@@ -11,8 +11,8 @@ function Relatorios() {
     const [dias, setDias] = useState([]);
     const navigate = useNavigate();
     const [authenticated, setAuthenticated] = useState(false);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [order, setOrder] = useState('desc');
 
     useEffect(() => {
@@ -42,23 +42,20 @@ function Relatorios() {
             return;
         }
 
-        // Define a data inicial no início do dia
-        const inicio = new Date(startDate);
-
-        // Define a data final no fim do dia
-        const fim = endOfDay(addDays(new Date(endDate), 1)); // Adiciona um dia
+        // Ajuste na definição da data inicial
+        const inicio = startOfDay(addDays(new Date(startDate), 1));
+        const fim = endOfDay(addDays(new Date(endDate), 1)); // Adiciona um dia para inclusão do último dia
 
         try {
             const q = query(
                 collection(db, 'entradas'),
                 where('timestamp', '>=', inicio),
-                where('timestamp', '<', fim), // Usando '<' em vez de '<=' para garantir que a data de fim não seja incluída
+                where('timestamp', '<', fim), // Utilize '<' para garantir que o dia final não seja incluído
                 orderBy('timestamp', order)
             );
 
             const querySnapshot = await getDocs(q);
             const diasMap = new Map();
-
             querySnapshot.forEach(doc => {
                 const data = doc.data();
                 if (data.timestamp && data.timestamp.toDate) {
@@ -69,15 +66,27 @@ function Relatorios() {
                     }
                 }
             });
-            
+
             setDias(Array.from(diasMap.values()));
         } catch (error) {
             console.error("Erro ao buscar relatórios: ", error);
         }
     };
 
+    const handleStartDateChange = (e) => {
+        const newDate = e.target.value ? new Date(e.target.value) : null;
+        setStartDate(newDate);
+    };
+
+    const handleEndDateChange = (e) => {
+        const newDate = e.target.value ? new Date(e.target.value) : null;
+        setEndDate(newDate);
+    };
+
     useEffect(() => {
-        fetchRelatorios();
+        if (startDate && endDate) {
+            fetchRelatorios();
+        }
     }, [startDate, endDate, order]);
 
     const handleDiaClick = (dia) => {
@@ -95,15 +104,15 @@ function Relatorios() {
                     De
                     <input
                         type="date"
-                        value={startDate.toISOString().split('T')[0]}
-                        onChange={(e) => setStartDate(new Date(e.target.value))}
+                        value={startDate ? startDate.toISOString().split('T')[0] : ''}
+                        onChange={handleStartDateChange}
                         style={{ border: '2px solid #273585', height: '100%', borderRadius: 5, backgroundColor: '#FFF', padding: 5 }}
                     />
                     até
                     <input
                         type="date"
-                        value={endDate.toISOString().split('T')[0]}
-                        onChange={(e) => setEndDate(new Date(e.target.value))}
+                        value={endDate ? endDate.toISOString().split('T')[0] : ''}
+                        onChange={handleEndDateChange}
                         style={{ border: '2px solid #273585', height: '100%', borderRadius: 5, backgroundColor: '#FFF', padding: 5 }}
                     />
                     <BiSortAlt2 style={{ width: '10%' }} size={26} onClick={() => setOrder(curr => curr === 'asc' ? 'desc' : 'asc')} />
