@@ -13,7 +13,11 @@ root.render(
   <React.StrictMode>
     <UserProvider>
       <App />
+<<<<<<< HEAD
     </UserProvider>
+=======
+    </UserProvider>,
+>>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
   </React.StrictMode>
 );
 
