@@ -42,26 +42,17 @@ function Relatorios() {
             return;
         }
 
-<<<<<<< HEAD
         // Define a data inicial no início do dia
         const inicio = new Date(startDate);
 
         // Define a data final no fim do dia
         const fim = endOfDay(addDays(new Date(endDate), 1)); // Adiciona um dia
-=======
-        const inicio = startOfDay(new Date(startDate));
-        const fim = endOfDay(new Date(endDate));
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
 
         try {
             const q = query(
                 collection(db, 'entradas'),
                 where('timestamp', '>=', inicio),
-<<<<<<< HEAD
                 where('timestamp', '<', fim), // Usando '<' em vez de '<=' para garantir que a data de fim não seja incluída
-=======
-                where('timestamp', '<=', fim),
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
                 orderBy('timestamp', order)
             );
 
@@ -78,20 +69,13 @@ function Relatorios() {
                     }
                 }
             });
-<<<<<<< HEAD
             
-=======
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
             setDias(Array.from(diasMap.values()));
         } catch (error) {
             console.error("Erro ao buscar relatórios: ", error);
         }
     };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
     useEffect(() => {
         fetchRelatorios();
     }, [startDate, endDate, order]);
@@ -102,11 +86,7 @@ function Relatorios() {
 
     return (
         <div style={{ display: 'flex', backgroundColor: '#273585', width: '100vw', height: '100vh', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
-<<<<<<< HEAD
             <div style={{ width: '90%', textAlign: 'center', height: '60%' }}>
-=======
-            <div style={{ width: '90%', textAlign: 'center', height: '60%'}}>
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
                 <div style={{ display: 'flex', color: '#FFF', fontWeight: 'bold', marginBottom: 16, fontSize: 26, flexDirection: 'row', width: '100%', alignItems: 'center' }}>
                     <BiArrowBack style={{ width: '10%' }} size={26} onClick={handleBack} />
                     Relatórios
@@ -128,11 +108,7 @@ function Relatorios() {
                     />
                     <BiSortAlt2 style={{ width: '10%' }} size={26} onClick={() => setOrder(curr => curr === 'asc' ? 'desc' : 'asc')} />
                 </div>
-<<<<<<< HEAD
                 <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5, height: '400px', overflowY: 'auto' }}>
-=======
-                <div style={{ backgroundColor: '#FFF', padding: 20, borderRadius: 5, height:'400px', overflowY: 'auto' }}>
->>>>>>> 355f3a0b54b91aae87af9fcb60071203c6388cbc
                     <div className="row">
                         {dias.length > 0 ?
                             dias.map((dia, index) => {
